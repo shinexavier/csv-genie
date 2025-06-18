@@ -1,0 +1,22 @@
+{
+  "name": "csv",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "csv-filter": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "commander": "^14.0.0",
+    "csv-parser": "^3.2.0",
+    "fast-csv": "^5.0.2",
+    "inquirer": "^12.6.3"
+  }
+}
