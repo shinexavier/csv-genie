@@ -14,7 +14,7 @@ This is a powerful and flexible command-line utility for filtering large CSV fil
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/your-username/csv-filter-utility.git
+    git clone https://github.com/shinexavier/csv-genie.git
     ```
 2.  Install the dependencies:
     ```bash
