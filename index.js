@@ -38,6 +38,7 @@ program
         name: 'column',
         message: 'Select a column to filter by:',
         choices: headers,
+        loop: false,
       },
     ]);
 
@@ -66,6 +67,7 @@ program
         name: 'selectedValues',
         message: `Select values from the "${column}" column to filter by:`,
         choices: choices,
+        loop: false,
       },
     ]);
 console.log(`\nYou have selected the following values from the "${column}" column:`);
@@ -94,7 +96,7 @@ console.log(`\nYou have selected the following values from the "${column}" colum
         console.log(`Parsed ${rowCount} rows`);
         csv.writeToPath(outputFile, rows, { headers: true })
           .on('error', err => console.error(err))
-          .on('finish', () => console.log(`Filtered data written to ${outputFile}`));
+          .on('finish', () => console.log(`Filtered data (${rows.length} rows) written to ${outputFile}`));
       });
   });
 
