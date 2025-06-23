@@ -41,25 +41,31 @@ program
       },
     ]);
 
-    const uniqueValues = await new Promise((resolve, reject) => {
-      const values = new Set();
+    const valueCounts = await new Promise((resolve, reject) => {
+      const counts = {};
       fs.createReadStream(inputFile)
         .pipe(csv.parse({ headers: true }))
         .on('data', (row) => {
-          if (row[column]) {
-            values.add(row[column]);
+          const value = row[column];
+          if (value) {
+            counts[value] = (counts[value] || 0) + 1;
           }
         })
-        .on('end', () => resolve([...values]))
+        .on('end', () => resolve(counts))
         .on('error', (err) => reject(err));
     });
+
+    const choices = Object.entries(valueCounts).map(([name, count]) => ({
+      name: `${name} (${count} rows)`,
+      value: name,
+    }));
 
     const { selectedValues } = await inquirer.prompt([
       {
         type: 'checkbox',
         name: 'selectedValues',
         message: `Select values from the "${column}" column to filter by:`,
-        choices: uniqueValues,
+        choices: choices,
       },
     ]);
 console.log(`\nYou have selected the following values from the "${column}" column:`);
