@@ -14,9 +14,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "chalk": "^4.1.2",
     "commander": "^14.0.0",
     "csv-parser": "^3.2.0",
     "fast-csv": "^5.0.2",
-    "inquirer": "^12.6.3"
+    "inquirer": "^12.6.3",
+    "string-similarity": "^4.0.4"
   }
 }
