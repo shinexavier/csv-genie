@@ -12,6 +12,8 @@ This is a powerful and flexible command-line utility for processing large CSV fi
     *   Convert CSV to other formats (currently JSON).
     *   Map CSV columns to a target schema.
     *   Intelligent auto-mapping with a configurable similarity threshold.
+    *   **AI-Powered Classification**: Automatically classify and standardize data using a custom stereotype definition file.
+    *   **Flexible AI Provider**: Choose between Google Gemini, OpenAI, or a local LLM for classification.
 *   **Fluent API**: A chainable, programmatic interface for advanced filtering.
 *   **Large File Support**: Efficiently processes large CSV files without loading the entire file into memory.
 
@@ -57,7 +59,67 @@ The command will guide you through the following steps:
     *   **Semantic Suggestions**: The tool will automatically suggest the most likely mapping based on the similarity of the field names.
     *   **Skip Fields**: You can choose to skip a mapping for any field. These fields will be included in the output with a `null` value.
     *   **Unnamed Columns**: If the tool detects a column without a name in your CSV, it will prompt you to provide one.
+    *   **AI Classification**: You can select `[✨ Classify with AI]` to trigger the AI-powered workflow.
 6.  **Confirm Mapping**: Before the transformation runs, you will be shown a color-coded summary of the mapping for a final confirmation.
+
+### Using AI-Powered Classification
+
+The AI classification feature allows you to use a Large Language Model to automatically categorize and standardize your data.
+
+#### 1. Configure your AI Provider
+
+You have two options for providing your API key:
+
+**Option 1: Secure Runtime Prompt (Recommended)**
+For maximum security, you can omit the API key from your environment. When you run the `transform` command, the tool will detect that the key is missing and securely prompt you to enter it. The key will be masked and used only for the current session; it will **not** be saved to disk.
+
+**Option 2: Environment File (Convenient)**
+For convenience in a trusted development environment, you can store your API key in a `.env` file.
+
+*   Copy the `.env.example` file to a new file named `.env`.
+*   Open the `.env` file and add the required information for your chosen provider. You only need to fill out the one you plan to use.
+
+    *   **For Google Gemini:**
+        ```
+        GEMINI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        ```
+    *   **For OpenAI:**
+        ```
+        OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        ```
+    *   **For a Local LLM:**
+        ```
+        LOCAL_LLM_ENDPOINT=http://localhost:8080/completion
+        ```
+        *(Note: The payload and response structure for local models can vary. The current implementation sends a generic prompt and expects a JSON object in response.)*
+
+#### 2. Create a Stereotype Definition File
+    *   This is a JSON file that defines the categories you want to classify your data into. It tells the AI how to group your source data and what the final mapped values should be.
+    *   See `data/product-stereotypes.json` for a detailed example.
+
+#### 3. Run the `transform` command
+*   When prompted to map a field, choose the `[✨ Classify with AI]` option.
+*   The tool will then ask you to:
+    1.  **Select your AI Provider** (Google Gemini, OpenAI, or Local LLM).
+    2.  Provide the **source column** to use for context (e.g., `product_name`).
+    3.  Provide the path to your **stereotype definition file**.
+*   The tool will then use your selected AI provider to classify the data and apply the correct values to the target field.
+
+#### 4. Debugging AI Classification
+If you encounter errors during AI classification, you can use the `--debug` flag to get more insight into the process.
+
+```bash
+node index.js transform --debug
+```
+
+When you run with this flag, a `debug.log` file will be created in the project root. This file will contain:
+*   The exact prompt that was sent to the AI model.
+*   The raw, unparsed response that was received from the model.
+*   A summary of token usage and the estimated cost for the API call.
+
+This information is invaluable for understanding why a request might be failing or why the model is not returning the expected data format.
+
+A summary of the token usage and estimated cost will also be printed to the console after every successful AI classification, even without the `--debug` flag.
 
 ### Fluent API (`query` command)
 
